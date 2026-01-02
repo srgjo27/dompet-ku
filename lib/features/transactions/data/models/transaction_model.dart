@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dompet_ku/features/transactions/domain/entities/transaction_category.dart';
 import 'package:dompet_ku/features/transactions/domain/entities/transaction_entity.dart';
 
 class TransactionModel extends TransactionEntity {
@@ -6,7 +7,7 @@ class TransactionModel extends TransactionEntity {
     String? id,
     required String title,
     required double amount,
-    required String category,
+    required TransactionCategory category,
     required DateTime date,
   }) : super(
          id: id,
@@ -25,7 +26,7 @@ class TransactionModel extends TransactionEntity {
       id: document.id,
       title: data['title'] ?? 'Tanpa Judul',
       amount: (data['amount'] ?? 0).toDouble(),
-      category: data['category'] ?? 'Lainnya',
+      category: TransactionCategory.fromString(data['category']),
       date: (data['date'] as Timestamp).toDate(),
     );
   }
@@ -34,7 +35,7 @@ class TransactionModel extends TransactionEntity {
     return {
       'title': title,
       'amount': amount,
-      'category': category,
+      'category': category.name,
       'date': Timestamp.fromDate(date),
     };
   }

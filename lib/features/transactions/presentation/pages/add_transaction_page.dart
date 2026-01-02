@@ -1,9 +1,17 @@
+import 'package:dompet_ku/features/transactions/domain/entities/transaction_category.dart';
 import 'package:dompet_ku/features/transactions/domain/entities/transaction_entity.dart';
 import 'package:dompet_ku/features/transactions/presentation/bloc/transaction_bloc.dart';
+import 'package:dompet_ku/features/transactions/presentation/widgets/add_transaction_button.dart';
+import 'package:dompet_ku/features/transactions/presentation/widgets/add_transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class AddTransactionPage extends StatefulWidget {
+  final TransactionEntity? transactionToEdit;
+
+  const AddTransactionPage({super.key, this.transactionToEdit});
+
   @override
   _AddTransactionPageState createState() => _AddTransactionPageState();
 }
@@ -11,7 +19,25 @@ class AddTransactionPage extends StatefulWidget {
 class _AddTransactionPageState extends State<AddTransactionPage> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+
   DateTime _selectedDate = DateTime.now();
+  TransactionCategory _selectedCategory = TransactionCategory.other;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.transactionToEdit != null) {
+      final tx = widget.transactionToEdit!;
+      _titleController.text = tx.title;
+      _amountController.text = NumberFormat.currency(
+        locale: 'id_ID',
+        symbol: '',
+        decimalDigits: 0,
+      ).format(tx.amount);
+      _selectedDate = tx.date;
+      _selectedCategory = tx.category;
+    }
+  }
 
   void _submitData() {
     if (_titleController.text.isEmpty || _amountController.text.isEmpty) {
@@ -19,17 +45,31 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     }
 
     final enteredTitle = _titleController.text;
-    final enteredAmount = double.parse(_amountController.text);
-
-    final newTx = TransactionEntity(
-      id: DateTime.now().toString(),
-      title: enteredTitle,
-      amount: enteredAmount,
-      date: _selectedDate,
-      category: 'Pengeluaran',
+    final sanitizedAmount = _amountController.text.replaceAll(
+      RegExp(r'[^\d]'),
+      '',
     );
+    final enteredAmount = double.parse(sanitizedAmount);
 
-    context.read<TransactionBloc>().add(AddTransactionEvent(newTx));
+    if (widget.transactionToEdit != null) {
+      final updatedTx = TransactionEntity(
+        id: widget.transactionToEdit!.id,
+        title: enteredTitle,
+        amount: enteredAmount,
+        date: _selectedDate,
+        category: _selectedCategory,
+      );
+      context.read<TransactionBloc>().add(UpdateTransactionEvent(updatedTx));
+    } else {
+      final newTx = TransactionEntity(
+        id: DateTime.now().toString(),
+        title: enteredTitle,
+        amount: enteredAmount,
+        date: _selectedDate,
+        category: _selectedCategory,
+      );
+      context.read<TransactionBloc>().add(AddTransactionEvent(newTx));
+    }
 
     Navigator.of(context).pop();
   }
@@ -53,48 +93,38 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Tambah Transaksi')),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(hintText: 'Judul Transaksi'),
-            ),
-            TextField(
-              controller: _amountController,
-              decoration: InputDecoration(hintText: 'Jumlah (Rp)'),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 20.0),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Tanggal: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                  ),
-                ),
-                TextButton(
-                  onPressed: _presentDatePicker,
-                  child: Text(
-                    'Pilih Tanggal',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 30.0),
-            ElevatedButton(
-              onPressed: _submitData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-              child: Text('Simpan Transaksi'),
-            ),
-          ],
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          widget.transactionToEdit != null
+              ? 'Edit Transaksi'
+              : 'Tambah Transaksi',
         ),
+        centerTitle: true,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: AddTransactionForm(
+                titleController: _titleController,
+                amountController: _amountController,
+                selectedCategory: _selectedCategory,
+                selectedDate: _selectedDate,
+                onCategoryChanged: (newValue) {
+                  setState(() {
+                    _selectedCategory = newValue!;
+                  });
+                },
+                onDateTap: _presentDatePicker,
+              ),
+            ),
+          ),
+          AddTransactionButton(onPressed: _submitData),
+        ],
       ),
     );
   }

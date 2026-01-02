@@ -13,11 +13,24 @@ class TransactionLoading extends TransactionState {}
 
 class TransactionLoaded extends TransactionState {
   final List<TransactionEntity> transactions;
+  final double totalBalance;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
-  const TransactionLoaded(this.transactions);
+  const TransactionLoaded(
+    this.transactions,
+    this.totalBalance, {
+    this.startDate,
+    this.endDate,
+  });
 
   @override
-  List<Object> get props => [transactions];
+  List<Object> get props => [
+    transactions,
+    totalBalance,
+    startDate ?? 'null',
+    endDate ?? 'null',
+  ];
 }
 
 class TransactionError extends TransactionState {

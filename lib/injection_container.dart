@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dompet_ku/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:dompet_ku/features/transactions/data/datasources/transaction_remote_data_source.dart';
 import 'package:dompet_ku/features/transactions/data/repositories/transaction_repository_impl.dart';
 import 'package:dompet_ku/features/transactions/domain/repositories/transaction_repository.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/add_transaction.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/delete_transaction.dart';
+import 'package:dompet_ku/features/transactions/domain/usecases/get_total_balance.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/get_transactions.dart';
+import 'package:dompet_ku/features/transactions/domain/usecases/update_transaction.dart';
 import 'package:dompet_ku/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -16,15 +19,19 @@ Future<void> init() async {
   sl.registerFactory(
     () => TransactionBloc(
       getTransactions: sl(),
+      getTotalBalance: sl(),
       addTransaction: sl(),
       deleteTransaction: sl(),
+      updateTransaction: sl(),
     ),
   );
 
   // Use cases
   sl.registerLazySingleton(() => GetTransactions(sl()));
+  sl.registerLazySingleton(() => GetTotalBalance(sl()));
   sl.registerLazySingleton(() => AddTransaction(sl()));
   sl.registerLazySingleton(() => DeleteTransaction(sl()));
+  sl.registerLazySingleton(() => UpdateTransaction(sl())); // Added registration
 
   // Repository
   sl.registerLazySingleton<TransactionRepository>(
@@ -39,4 +46,6 @@ Future<void> init() async {
   //! --- External ---
   final firestore = FirebaseFirestore.instance;
   sl.registerLazySingleton(() => firestore);
+
+  sl.registerFactory(() => NavigationCubit());
 }

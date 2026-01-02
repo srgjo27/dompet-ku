@@ -25,6 +25,20 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
+  Future<Either<Failure, void>> updateTransaction(
+    TransactionEntity transaction,
+  ) async {
+    try {
+      await remoteDataSource.updateTransaction(
+        TransactionModel.fromEntity(transaction),
+      );
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> deleteTransaction(String id) async {
     try {
       await remoteDataSource.deleteTransaction(id);
@@ -36,11 +50,27 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<Either<Failure, List<TransactionEntity>>> getTransactions() async {
+  Future<Either<Failure, List<TransactionEntity>>> getTransactions({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     try {
-      final remoteTransactions = await remoteDataSource.getTransactions();
+      final remoteTransactions = await remoteDataSource.getTransactions(
+        startDate: startDate,
+        endDate: endDate,
+      );
 
       return Right(remoteTransactions);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, double>> getTotalBalance() async {
+    try {
+      final balance = await remoteDataSource.getTotalBalance();
+      return Right(balance);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

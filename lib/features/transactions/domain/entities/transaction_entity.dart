@@ -1,10 +1,11 @@
+import 'package:dompet_ku/features/transactions/domain/entities/transaction_category.dart';
 import 'package:equatable/equatable.dart';
 
 class TransactionEntity extends Equatable {
   final String? id;
   final String title;
   final double amount;
-  final String category;
+  final TransactionCategory category;
   final DateTime date;
 
   const TransactionEntity({

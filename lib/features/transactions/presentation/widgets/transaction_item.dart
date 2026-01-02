@@ -1,4 +1,5 @@
 import 'package:dompet_ku/features/transactions/domain/entities/transaction_entity.dart';
+import 'package:dompet_ku/features/transactions/presentation/pages/add_transaction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -34,20 +35,42 @@ class TransactionItem extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: ListTile(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    AddTransactionPage(transactionToEdit: transaction),
+              ),
+            );
+          },
           leading: CircleAvatar(
-            backgroundColor: Colors.green.shade100,
-            child: Icon(Icons.attach_money, color: Colors.green),
+            backgroundColor: transaction.category.label == 'Pemasukan'
+                ? Colors.green.shade100
+                : Colors.red.shade100,
+            child: Text(
+              'Rp',
+              style: TextStyle(
+                color: transaction.category.label == 'Pemasukan'
+                    ? Colors.green
+                    : Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
           ),
           title: Text(
             transaction.title,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.w500),
           ),
-          subtitle: Text(DateFormat.yMMMd().format(transaction.date)),
+          subtitle: Text(DateFormat.yMMMd('id_ID').format(transaction.date)),
           trailing: Text(
-            currencyFormatter.format(transaction.amount),
+            transaction.category.label == 'Pemasukan'
+                ? "+${currencyFormatter.format(transaction.amount)}"
+                : "-${currencyFormatter.format(transaction.amount)}",
             style: TextStyle(
-              color: Colors.red.shade700,
-              fontWeight: FontWeight.bold,
+              color: transaction.category.label == 'Pemasukan'
+                  ? Colors.green
+                  : Colors.red,
               fontSize: 14.0,
             ),
           ),

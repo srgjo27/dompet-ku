@@ -7,7 +7,15 @@ abstract class TransactionEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetTransactionsEvent extends TransactionEvent {}
+class GetTransactionsEvent extends TransactionEvent {
+  final DateTime? startDate;
+  final DateTime? endDate;
+
+  const GetTransactionsEvent({this.startDate, this.endDate});
+
+  @override
+  List<Object> get props => [startDate ?? '', endDate ?? ''];
+}
 
 class AddTransactionEvent extends TransactionEvent {
   final TransactionEntity transaction;
@@ -25,4 +33,13 @@ class DeleteTransactionEvent extends TransactionEvent {
 
   @override
   List<Object> get props => [id];
+}
+
+class UpdateTransactionEvent extends TransactionEvent {
+  final TransactionEntity transaction;
+
+  const UpdateTransactionEvent(this.transaction);
+
+  @override
+  List<Object> get props => [transaction];
 }

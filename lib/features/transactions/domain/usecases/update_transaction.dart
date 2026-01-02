@@ -3,18 +3,12 @@ import 'package:dompet_ku/core/error/failures.dart';
 import 'package:dompet_ku/features/transactions/domain/entities/transaction_entity.dart';
 import 'package:dompet_ku/features/transactions/domain/repositories/transaction_repository.dart';
 
-class GetTransactions {
+class UpdateTransaction {
   final TransactionRepository repository;
 
-  GetTransactions(this.repository);
+  UpdateTransaction(this.repository);
 
-  Future<Either<Failure, List<TransactionEntity>>> call({
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
-    return await repository.getTransactions(
-      startDate: startDate,
-      endDate: endDate,
-    );
+  Future<Either<Failure, void>> call(TransactionEntity transaction) async {
+    return await repository.updateTransaction(transaction);
   }
 }
