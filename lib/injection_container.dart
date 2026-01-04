@@ -4,6 +4,7 @@ import 'package:dompet_ku/features/transactions/data/datasources/transaction_rem
 import 'package:dompet_ku/features/transactions/data/repositories/transaction_repository_impl.dart';
 import 'package:dompet_ku/features/transactions/domain/repositories/transaction_repository.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/add_transaction.dart';
+import 'package:dompet_ku/features/transactions/domain/usecases/delete_all_transactions.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/delete_transaction.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/get_total_balance.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/get_transactions.dart';
@@ -23,6 +24,7 @@ Future<void> init() async {
       addTransaction: sl(),
       deleteTransaction: sl(),
       updateTransaction: sl(),
+      deleteAllTransactions: sl(),
     ),
   );
 
@@ -31,7 +33,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetTotalBalance(sl()));
   sl.registerLazySingleton(() => AddTransaction(sl()));
   sl.registerLazySingleton(() => DeleteTransaction(sl()));
-  sl.registerLazySingleton(() => UpdateTransaction(sl())); // Added registration
+  sl.registerLazySingleton(() => UpdateTransaction(sl()));
+  sl.registerLazySingleton(() => DeleteAllTransactions(sl()));
 
   // Repository
   sl.registerLazySingleton<TransactionRepository>(

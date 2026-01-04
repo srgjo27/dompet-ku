@@ -1,5 +1,6 @@
 import 'package:dompet_ku/features/transactions/domain/entities/transaction_entity.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/add_transaction.dart';
+import 'package:dompet_ku/features/transactions/domain/usecases/delete_all_transactions.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/delete_transaction.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/get_total_balance.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/get_transactions.dart';
@@ -16,6 +17,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final AddTransaction addTransaction;
   final DeleteTransaction deleteTransaction;
   final UpdateTransaction updateTransaction;
+  final DeleteAllTransactions deleteAllTransactions;
 
   DateTime? _currentStartDate;
   DateTime? _currentEndDate;
@@ -26,6 +28,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required this.addTransaction,
     required this.deleteTransaction,
     required this.updateTransaction,
+    required this.deleteAllTransactions,
   }) : super(TransactionInitial()) {
     on<GetTransactionsEvent>((event, emit) async {
       emit(TransactionLoading());
@@ -68,6 +71,15 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
     on<DeleteTransactionEvent>((event, emit) async {
       final result = await deleteTransaction(event.id);
+      result.fold(
+        (failure) => emit(TransactionError(failure.message)),
+        (success) => add(GetTransactionsEvent()),
+      );
+    });
+
+    on<DeleteAllTransactionsEvent>((event, emit) async {
+      emit(TransactionLoading());
+      final result = await deleteAllTransactions();
       result.fold(
         (failure) => emit(TransactionError(failure.message)),
         (success) => add(GetTransactionsEvent()),

@@ -12,5 +12,6 @@ abstract class TransactionRepository {
     TransactionEntity transaction,
   );
   Future<Either<Failure, void>> deleteTransaction(String id);
+  Future<Either<Failure, void>> deleteAllTransactions();
   Future<Either<Failure, double>> getTotalBalance();
 }

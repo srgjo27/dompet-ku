@@ -2,6 +2,7 @@ import 'package:dompet_ku/features/transactions/domain/entities/transaction_cate
 import 'package:dompet_ku/features/transactions/presentation/bloc/transaction_bloc.dart';
 import 'package:dompet_ku/features/statistics/presentation/widgets/transaction_type_pie_chart.dart';
 import 'package:dompet_ku/features/statistics/presentation/widgets/statistic_header.dart';
+import 'package:dompet_ku/features/statistics/presentation/widgets/daily_trend_line_chart.dart';
 import 'package:dompet_ku/features/statistics/presentation/widgets/colorful_summary_card.dart';
 import 'package:dompet_ku/features/statistics/presentation/utils/report_generator.dart';
 import 'package:flutter/material.dart';
@@ -112,6 +113,19 @@ class StatisticPage extends StatelessWidget {
                             transactions: transactions,
                           ),
                         ),
+                        const SizedBox(height: 24),
+                        Container(
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: Colors.grey.shade200),
+                          ),
+                          child: DailyTrendLineChart(
+                            transactions: transactions,
+                          ),
+                        ),
+                        const SizedBox(height: 100),
                       ],
                     ),
                   ),

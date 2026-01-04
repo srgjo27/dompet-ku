@@ -9,6 +9,7 @@ abstract class TransactionRemoteDataSource {
   Future<void> addTransaction(TransactionModel transaction);
   Future<void> updateTransaction(TransactionModel transaction);
   Future<void> deleteTransaction(String id);
+  Future<void> deleteAllTransactions();
   Future<double> getTotalBalance();
 }
 
@@ -16,6 +17,17 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   final FirebaseFirestore firestore;
 
   TransactionRemoteDataSourceImpl({required this.firestore});
+
+  @override
+  Future<void> deleteAllTransactions() async {
+    final collection = firestore.collection('transactions');
+    final snapshots = await collection.get();
+    final batch = firestore.batch();
+    for (var doc in snapshots.docs) {
+      batch.delete(doc.reference);
+    }
+    await batch.commit();
+  }
 
   @override
   Future<void> addTransaction(TransactionModel transaction) async {

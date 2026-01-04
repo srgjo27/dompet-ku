@@ -50,6 +50,16 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
+  Future<Either<Failure, void>> deleteAllTransactions() async {
+    try {
+      await remoteDataSource.deleteAllTransactions();
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, List<TransactionEntity>>> getTransactions({
     DateTime? startDate,
     DateTime? endDate,
