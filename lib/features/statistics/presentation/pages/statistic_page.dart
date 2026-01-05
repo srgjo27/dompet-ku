@@ -45,7 +45,11 @@ class StatisticPage extends StatelessWidget {
                 .fold(0.0, (sum, tx) => sum + tx.amount);
 
             final totalExpense = transactions
-                .where((tx) => tx.category == TransactionCategory.expense)
+                .where(
+                  (tx) =>
+                      tx.category == TransactionCategory.expense ||
+                      tx.category == TransactionCategory.other,
+                )
                 .fold(0.0, (sum, tx) => sum + tx.amount);
 
             final netBalance = totalIncome - totalExpense;

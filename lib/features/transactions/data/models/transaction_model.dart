@@ -49,4 +49,24 @@ class TransactionModel extends TransactionEntity {
       date: entity.date,
     );
   }
+
+  factory TransactionModel.fromMap(Map<String, Object?> map) {
+    return TransactionModel(
+      id: map['id'] as String?,
+      title: map['title'] as String,
+      amount: (map['amount'] as num).toDouble(),
+      category: TransactionCategory.fromString(map['category'] as String),
+      date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
+    );
+  }
+
+  Map<String, Object?> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'amount': amount,
+      'category': category.name,
+      'date': date.millisecondsSinceEpoch,
+    };
+  }
 }

@@ -83,7 +83,8 @@ class DailyTrendLineChart extends StatelessWidget {
 
       if (tx.category == TransactionCategory.income) {
         groupedData[date]!.income += tx.amount;
-      } else if (tx.category == TransactionCategory.expense) {
+      } else if (tx.category == TransactionCategory.expense ||
+          tx.category == TransactionCategory.other) {
         groupedData[date]!.expense += tx.amount;
       }
     }

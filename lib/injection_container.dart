@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dompet_ku/core/database/database_helper.dart';
 import 'package:dompet_ku/features/main/presentation/cubit/navigation_cubit.dart';
+import 'package:dompet_ku/features/transactions/data/datasources/transaction_local_data_source.dart';
 import 'package:dompet_ku/features/transactions/data/datasources/transaction_remote_data_source.dart';
-import 'package:dompet_ku/features/transactions/data/repositories/transaction_repository_impl.dart';
+import 'package:dompet_ku/features/transactions/data/repositories/transaction_local_repository_impl.dart';
 import 'package:dompet_ku/features/transactions/domain/repositories/transaction_repository.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/add_transaction.dart';
 import 'package:dompet_ku/features/transactions/domain/usecases/delete_all_transactions.dart';
@@ -38,13 +40,19 @@ Future<void> init() async {
 
   // Repository
   sl.registerLazySingleton<TransactionRepository>(
-    () => TransactionRepositoryImpl(remoteDataSource: sl()),
+    () => TransactionLocalRepositoryImpl(localDataSource: sl()),
   );
 
   // Data sources
+  sl.registerLazySingleton<TransactionLocalDataSource>(
+    () => TransactionLocalDataSourceImpl(databaseHelper: sl()),
+  );
+
   sl.registerLazySingleton<TransactionRemoteDataSource>(
     () => TransactionRemoteDataSourceImpl(firestore: sl()),
   );
+
+  sl.registerLazySingleton(() => DatabaseHelper.instance);
 
   //! --- External ---
   final firestore = FirebaseFirestore.instance;
