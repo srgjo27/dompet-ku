@@ -44,7 +44,7 @@ Aplikasi ini dibangun menggunakan teknologi dan library terkini di ekosistem Flu
 
 Berikut adalah tampilan antarmuka aplikasi DompetKu:
 
-| Dashboard & Statistik | Input Transaksi | Laporan Keuangan | Pengaturan |
+| Dashboard & Statistik | Laporan Keuangan | Pengaturan | Generator |
 |:---:|:---:|:---:|:---:|
 | <img src="assets/screenshots/Screenshot_1767594087.png" width="200" /> | <img src="assets/screenshots/Screenshot_1767594094.png" width="200" /> | <img src="assets/screenshots/Screenshot_1767594097.png" width="200" /> | <img src="assets/screenshots/Screenshot_1767594104.png" width="200" /> |
 
