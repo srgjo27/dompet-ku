@@ -27,78 +27,113 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 360,
-      padding: EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 20),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [Color(0xFF4CAF50), Color(0xFF2E7D32)],
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Center(
-            child: Text(
-              'DompetKu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+          Positioned(
+            right: -100,
+            top: -100,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
               ),
             ),
           ),
-          SizedBox(height: 20),
-          Text(
-            'Total Saldo',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-          ),
-          SizedBox(height: 5),
-          Text(
-            _formatCurrency(totalBalance),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
+          Positioned(
+            right: -20,
+            top: -50,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
-          SizedBox(height: 20),
-          Row(
-            spacing: 10,
-            children: [
-              _buildSummaryItem(
-                'Pemasukan',
-                totalIncome,
-                Icons.arrow_downward,
-                Colors.green.shade100,
-              ),
-              _buildSummaryItem(
-                'Pengeluaran',
-                totalExpense,
-                Icons.arrow_upward,
-                Colors.red.shade100,
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton.icon(
-              onPressed: onAddTransaction,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Color(0xFF2E7D32),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 50,
+              left: 20,
+              right: 20,
+              bottom: 20,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: Text(
+                    'DompetKu',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-                elevation: 0,
-              ),
-              icon: Icon(Icons.add),
-              label: Text(
-                'Tambah Transaksi',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Total Saldo',
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  _formatCurrency(totalBalance),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    _buildSummaryItem(
+                      'Pemasukan',
+                      totalIncome,
+                      Icons.arrow_downward,
+                      Colors.green.shade100,
+                    ),
+                    const SizedBox(width: 10),
+                    _buildSummaryItem(
+                      'Pengeluaran',
+                      totalExpense,
+                      Icons.arrow_upward,
+                      Colors.red.shade100,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton.icon(
+                    onPressed: onAddTransaction,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF2E7D32),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.add),
+                    label: const Text(
+                      'Tambah Transaksi',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
